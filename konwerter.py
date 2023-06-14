@@ -1,10 +1,12 @@
 import argparse
 import json
+import string
 
 parser = argparse.ArgumentParser(description='Konwersja plików XML, JSON i YAML.')
 
 parser.add_argument('input_file', type=str, help='Nazwa pliku wejściowego.')
 parser.add_argument('output_file', type=str, help='Nazwa pliku wyjściowego.')
+parser.add_argument('format', type=str, help='Format pliku')
 
 args = parser.parse_args()
 
@@ -23,4 +25,3 @@ if input_file_extension == 'json':
         except json.JSONDecodeError as e:
             print('Niepoprawny format pliku.', str(e))
             exit(1)
-
