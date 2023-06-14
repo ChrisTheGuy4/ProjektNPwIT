@@ -3,6 +3,7 @@ import json
 import yaml
 import os
 import xmltodict
+import string
 
 parser = argparse.ArgumentParser(description='Konwersja plików XML, JSON i YAML.')
 
@@ -13,6 +14,9 @@ args = parser.parse_args()
 if not os.path.isfile(args.input_file):
     print(f"Plik wejściowy '{args.input_file}' nie istnieje.")
     exit(1)
+parser.add_argument('format', type=str, help='Format pliku')
+
+args = parser.parse_args()
 
 input_file_extension = args.input_file.split('.')[-1]
 input_file_extension = input_file_extension.lower()
@@ -21,6 +25,7 @@ output_file_extension = args.output_file.split('.')[-1]
 output_file_extension = output_file_extension.lower()
 
 # wczytywanie danych
+
 if input_file_extension == 'json':
     with open(args.input_file, 'r') as file:
         try:
@@ -50,7 +55,6 @@ else:
     print('Niepoprawny format pliku wejściowego. Dostępne formaty: xml, json, yaml.')
     exit(1)
 
-# Funkcje zapisywania danych do nowego formatu
 def same_extension():
     print("Format pliku wejściowego i wyjściowego jest taki sam! Plik nie został utworzony.")
     exit(1)
@@ -63,9 +67,7 @@ if input_file_extension == 'yaml':
             print('Niepoprawny format pliku YAML.', str(e))
             exit(1)
 
-
 # Funkcje zapisywania danych do nowego formatu
-
 
 def same_extension():
     print("Format pliku wejściowego i wyjściowego jest taki sam! Plik niie został utworzony.")
@@ -113,3 +115,4 @@ elif input_file_extension == 'xml':
 
 else:
     print("Nieobsługiwana kombinacja formatów plików.")
+    same_extension()
