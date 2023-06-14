@@ -81,6 +81,7 @@ class Window(QMainWindow):
         self.button2.setMaximumWidth(max_width)
         self.button2.clicked.connect(self.openFolderDialog)
 
+        
         self.button3 = QPushButton("Konwertuj", widget)
         self.button3.setMaximumWidth(max_width)
         self.button3.clicked.connect(self.Convert)
@@ -90,6 +91,11 @@ class Window(QMainWindow):
         self.small_label3.setStyleSheet("font-size: 16px; font-weight: bold; margin-right: 16px")
 
         self.small_label4 = QLabel("", widget)
+        self.small_label3 = QLabel("Placeholder", widget)
+        self.small_label3.setAlignment(Qt.AlignCenter)
+        self.small_label3.setStyleSheet("font-size: 16px; font-weight: bold; margin-right: 16px")
+
+        self.small_label4 = QLabel("Placeholder", widget)
         self.small_label4.setAlignment(Qt.AlignCenter)
         self.small_label4.setStyleSheet("font-size: 16px; font-weight: bold; margin-right: 16px")
 
@@ -139,6 +145,11 @@ class Window(QMainWindow):
         options = QFileDialog.Options()
         options |= QFileDialog.ShowDirsOnly
         self.fileDir = ROOT_DIR
+    def openFolderDialog(self):
+        options = QFileDialog.Options()
+        options |= QFileDialog.ShowDirsOnly
+        global fileDir
+        fileDir = ROOT_DIR
         fileDirTmp = QFileDialog.getExistingDirectory(self,"Wybierz miejsce zapisu", "", options=options)
         if fileDirTmp == "":
             fileDirLoc = "Obecnie wybrany katalog zapisu:\n"+ROOT_DIR
@@ -152,6 +163,11 @@ class Window(QMainWindow):
         self.checkBoxXML.setChecked(False)
         self.checkBoxJSON.setChecked(False)
         self.checkBoxYML.setChecked(False)
+            fileDir = fileDirTmp
+            fileDirLoc = "Obecnie wybrany katalog zapisu:\n"+fileDir
+            self.small_label2.setText(fileDirLoc)
+
+    def openFileDialog(self):
         options = QFileDialog.Options()
         filter = "Config files (*.xml *.json *.yml *.yaml)"
         fileTmp = QFileDialog.getOpenFileName(self,"Wybierz plik do konwersji", "", filter, options=options)
@@ -169,6 +185,12 @@ class Window(QMainWindow):
                 self.checkBoxJSON.setEnabled(True)
                 self.checkBoxYML.setEnabled(True)
             elif self.fileExtension == 'json':
+            fileExtention = self.file.split('.')[-1]
+            if fileExtention == 'xml':
+                self.checkBoxXML.setEnabled(False)
+                self.checkBoxJSON.setEnabled(True)
+                self.checkBoxYML.setEnabled(True)
+            elif fileExtention == 'json':
                 self.checkBoxXML.setEnabled(True)
                 self.checkBoxJSON.setEnabled(False)
                 self.checkBoxYML.setEnabled(True)
@@ -242,6 +264,11 @@ class Window(QMainWindow):
                         data = xmltodict.parse(xml_file.read())
                 except xmltodict.ExpatError as e:
                     self.small_label3.setText('Plik uszkodzony.', str(e))
+        if hasattr(self, 'file'):
+            file = self.file
+            print(file)
+            self.small_label3.setText("")
+            self.small_label4.setText("")
             if self.checkBoxJSON.isChecked() == False and self.checkBoxXML.isChecked() == False and self.checkBoxYML.isChecked() == False:
                 self.small_label3.setText("Wybierz na co przekonwertować plik!")
             else:
@@ -267,6 +294,21 @@ class Window(QMainWindow):
                         self.small_label3.setText("Konwersja na plik JSON ukończona")
                     else:
                         self.small_label4.setText("Konwersja na plik JSON ukończona")
+                    self.small_label3.setText("XML_True")
+                else:
+                    print("XML_False")
+                if self.checkBoxYML.isChecked():
+                    if self.small_label3.text() == "XML_True":
+                        self.small_label4.setText("YML_True")
+                    else:
+                        self.small_label3.setText("YML_True")
+                else:
+                    print("YML_False")
+                if self.checkBoxJSON.isChecked():
+                    if self.small_label3.text() == "":
+                        self.small_label3.setText("JSON_True")
+                    else:
+                        self.small_label4.setText("JSON_True")
                 else:
                     print("JSON_False")
         else:
@@ -276,4 +318,5 @@ if __name__ == '__main__':
     app = QApplication(sys.argv)
     window = Window()
     window.show()
+    sys.exit(app.exec_())
     sys.exit(app.exec_())

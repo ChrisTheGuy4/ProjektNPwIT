@@ -3,6 +3,7 @@ import json
 import yaml
 import os
 import xmltodict
+import string
 
 parser = argparse.ArgumentParser(description='Konwersja plików XML, JSON i YAML.')
 
@@ -13,6 +14,9 @@ args = parser.parse_args()
 if not os.path.isfile(args.input_file):
     print(f"Plik wejściowy '{args.input_file}' nie istnieje.")
     exit(1)
+parser.add_argument('format', type=str, help='Format pliku')
+
+args = parser.parse_args()
 
 input_file_extension = args.input_file.split('.')[-1]
 input_file_extension = input_file_extension.lower()
@@ -101,6 +105,13 @@ def xml_to_yaml():
     with open(args.output_file, "w") as yaml_file:
         yaml_file.write(yaml_data)
         yaml_file.close()
+def json_to_yaml():
+    with open(args.output_file, 'w') as file:
+        yaml.dump(data, file)
+
+def yaml_to_json():
+    with open(args.output_file, 'w') as file:
+        json.dump(data, file)
 
 # Wywoływanie funkcji
 
@@ -109,6 +120,8 @@ if input_file_extension == output_file_extension:
 
 
 elif input_file_extension == 'json':
+elif input_file_extension == 'json':
+if input_file_extension == 'json':
     if output_file_extension == 'yaml':
         print("Konwertowanie pliku json na yaml...")
         json_to_yaml()
@@ -119,6 +132,8 @@ elif input_file_extension == 'json':
 
 
 elif input_file_extension == 'yaml':
+elif input_file_extension == 'yaml':
+if input_file_extension == 'yaml':
     if output_file_extension == 'json':
         print("Konwertowanie pliku yaml na json...")
         yaml_to_json()
@@ -138,3 +153,4 @@ elif input_file_extension == 'xml':
 
 else:
     print("Nieobsługiwana kombinacja formatów plików.")
+    same_extension()
