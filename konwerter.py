@@ -41,8 +41,27 @@ def same_extension():
     print("Format pliku wejściowego i wyjściowego jest taki sam! Plik niie został utworzony.")
     exit(1)
 
+def json_to_yaml():
+    with open(args.output_file, 'w') as file:
+        yaml.dump(data, file)
+
+
+def yaml_to_json():
+    with open(args.output_file, 'w') as file:
+        json.dump(data, file)
+
 # Wywoływanie funkcji
 
 if input_file_extension == output_file_extension:
     same_extension()
+
+if input_file_extension == 'json':
+    if output_file_extension == 'yaml':
+        print("Konwertowanie pliku json na yaml...")
+        json_to_yaml()
+
+if input_file_extension == 'yaml':
+    if output_file_extension == 'json':
+        print("Konwertowanie pliku yaml na json...")
+        yaml_to_json()
     same_extension()
